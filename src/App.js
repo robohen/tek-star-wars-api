@@ -1,25 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-function App() {
+
+
+const App = () => {
+    const [character, setCharacter] = useState(null);
+
+
+    useEffect(() => {
+    const fetchCharacter = async () => {
+        try {
+            const response = await axios.get('https://swapi.dev/api/people/1/');
+            setCharacter(response.data);
+        }catch(error) {
+            console.error("There was an error fetching the character desired", error);
+        }
+    };
+    fetchCharacter();
+    }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <div>
+    {character ? (
+      <div>
+        <h2>{character.name}</h2>
+        <p>Height: {character.height}</p>
+        <p>Mass: {character.mass}</p>
+       
+      </div>
+    ) : (
+      <p>Loading...</p>
+    )}
+  </div>
+  )
 }
 
 export default App;
